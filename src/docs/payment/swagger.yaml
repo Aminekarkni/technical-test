@@ -1,0 +1,100 @@
+openapi: 3.0.0
+info:
+  title: Payment API
+  version: 1.0.0
+  description: Payment endpoints
+paths:
+  /api/payments/fixed-price-order:
+    post:
+      summary: Create a fixed price order and initiate payment
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                productId:
+                  type: integer
+                quantity:
+                  type: integer
+                deliveryType:
+                  type: string
+                  enum: [DELIVERY, PICKUP]
+      responses:
+        '200':
+          description: Payment initiated
+  /api/payments/auction-order:
+    post:
+      summary: Initiate payment for an auction order
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderId:
+                  type: integer
+      responses:
+        '200':
+          description: Payment initiated
+  /api/payments/status/{invoiceId}:
+    get:
+      summary: Get payment status
+      parameters:
+        - in: path
+          name: invoiceId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Payment status
+  /api/payments/callback:
+    post:
+      summary: MyFatoorah payment webhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Webhook processed
+  /api/payments/refund/{invoiceId}:
+    post:
+      summary: Refund a payment
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: invoiceId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                reason:
+                  type: string
+      responses:
+        '200':
+          description: Refund processed
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 

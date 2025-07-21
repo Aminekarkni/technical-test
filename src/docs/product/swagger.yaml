@@ -1,0 +1,94 @@
+openapi: 3.0.0
+info:
+  title: Product API
+  version: 1.0.0
+  description: Product endpoints
+paths:
+  /api/products:
+    get:
+      summary: List all products
+      responses:
+        '200':
+          description: List of products
+    post:
+      summary: Create a new product
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                type:
+                  type: string
+                  enum: [fixed_price, auction]
+                price:
+                  type: number
+                startingPrice:
+                  type: number
+                auctionEndTime:
+                  type: string
+                  format: date-time
+                stockQuantity:
+                  type: integer
+                categoryId:
+                  type: integer
+      responses:
+        '200':
+          description: Product created
+  /api/products/{id}:
+    get:
+      summary: Get product by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Product details
+    put:
+      summary: Update product
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Product updated
+    delete:
+      summary: Delete product
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Product deleted
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 

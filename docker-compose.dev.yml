@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: milagro-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=milagro
+      - DB_USER=milagro_user
+      - DB_PASSWORD=milagro_password
+      - DB_DIALECT=mysql
+      - PORT=3000
+      - BASE_URL=http://localhost:3000
+      - CORS_URL=http://localhost:3000
+      - JWT_ACCESS_SECRET=dev_jwt_access_secret
+      - JWT_REFRESH_SECRET=dev_jwt_refresh_secret
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - milagro-network
+    command: npm run dev
+
+  mysql:
+    image: mysql:8.0
+    container_name: milagro-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: milagro
+      MYSQL_USER: milagro_user
+      MYSQL_PASSWORD: milagro_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - milagro-network
+    command: --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: milagro-phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: rootpassword
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - milagro-network
+
+volumes:
+  mysql_data:
+
+networks:
+  milagro-network:
+    driver: bridge 

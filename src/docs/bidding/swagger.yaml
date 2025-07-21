@@ -1,0 +1,94 @@
+openapi: 3.0.0
+info:
+  title: Bidding API
+  version: 1.0.0
+  description: Bidding endpoints
+paths:
+  /api/products/{id}/bids:
+    post:
+      summary: Place a bid on an auction product
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bidAmount:
+                  type: number
+                note:
+                  type: string
+      responses:
+        '200':
+          description: Bid placed
+    get:
+      summary: Get all bids for a product
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of bids
+  /api/products/{id}/bids/winning:
+    get:
+      summary: Get winning bid for a product
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Winning bid
+  /api/products/{id}/bids/stats:
+    get:
+      summary: Get auction statistics
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Auction stats
+  /api/bidding/my-bids:
+    get:
+      summary: Get all bids by the authenticated user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of user bids
+  /api/bidding/cancel/{bidId}:
+    delete:
+      summary: Cancel a bid
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: bidId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Bid cancelled
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 

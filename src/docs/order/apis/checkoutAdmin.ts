@@ -1,0 +1,33 @@
+/**
+ * @swagger
+ * /orders/checkout-admin:
+ *    post:
+ *      tags: [Order]
+ *      summary: checkout order for admin usage
+ *      consumes:
+ *        - application/json
+ *        - multipart/form-data
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *              schema:
+ *                $ref: '#components/schemas/CheckoutAdmin'
+ *          multipart/form-data:
+ *              schema:
+ *                $ref: '#components/schemas/CheckoutAdmin'
+ *      responses:
+ *        200:
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/GetOrder'
+ *        400:
+ *          description: 	Validation Failed
+ *        401:
+ *          description: Error Token
+ *        403:
+ *          description: Access Denied / Unauthorized
+ *        500:
+ *          description: Internal server error
+ */
