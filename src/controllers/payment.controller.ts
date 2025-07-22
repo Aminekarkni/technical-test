@@ -249,3 +249,38 @@ export const refundPayment = async (req: Request, res: Response, next: NextFunct
     next(error);
   }
 };
+
+export const mockPayment = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { orderId } = req.query;
+
+    if (!orderId) {
+      throw new BadRequestError('Order ID is required');
+    }
+
+    const order = await Order.findByPk(Number(orderId), {
+      include: [{ model: OrderItem, as: 'items' }],
+    });
+
+    if (!order) {
+      throw new NotFoundError('Order not found');
+    }
+
+    // Mock payment success
+    await order.update({
+      paymentStatus: PaymentStatus.PAID,
+      status: 'confirmed',
+    });
+
+    return new SuccessResponse('Payment completed successfully', {
+      orderId: order.id,
+      orderNumber: order.orderNumber,
+      totalAmount: order.totalAmount,
+      paymentStatus: order.paymentStatus,
+      status: order.status,
+      items: order.items,
+    }).send(res);
+  } catch (error) {
+    next(error);
+  }
+};

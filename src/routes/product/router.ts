@@ -5,8 +5,18 @@ import * as biddingController from '../../controllers/bidding.controller';
 import validator, { ValidationSource } from '../../helpers/utils/validator';
 import schema from './schema';
 import biddingSchema from '../bidding/schema';
+import { Request, Response, NextFunction } from 'express';
+import Joi from 'joi';
 
 const router = express.Router();
+
+// Product-specific bidding schema (without productId in body)
+const productBidSchema = {
+  body: Joi.object().keys({
+    bidAmount: Joi.number().required().min(0.01),
+    note: Joi.string().optional().max(500),
+  }),
+};
 
 router
   .route('/')
@@ -41,26 +51,42 @@ router
   .post(
     authentication,
     validator(schema.param, ValidationSource.PARAM),
-    validator(biddingSchema.placeBid),
-    biddingController.placeBid
+    validator(productBidSchema, ValidationSource.BODY),
+    (req: Request, res: Response, next: NextFunction) => {
+      // Add productId to body from params for consistency
+      req.body.productId = Number(req.params.id);
+      biddingController.placeBid(req, res, next);
+    }
   )
   .get(
     validator(schema.param, ValidationSource.PARAM),
-    biddingController.getProductBids
+    (req: Request, res: Response, next: NextFunction) => {
+      // Add productId to params for consistency
+      req.params.productId = req.params.id;
+      biddingController.getProductBids(req, res, next);
+    }
   );
 
 router
   .route('/:id/bids/winning')
   .get(
     validator(schema.param, ValidationSource.PARAM),
-    biddingController.getWinningBid
+    (req: Request, res: Response, next: NextFunction) => {
+      // Add productId to params for consistency
+      req.params.productId = req.params.id;
+      biddingController.getWinningBid(req, res, next);
+    }
   );
 
 router
   .route('/:id/bids/stats')
   .get(
     validator(schema.param, ValidationSource.PARAM),
-    biddingController.getAuctionStats
+    (req: Request, res: Response, next: NextFunction) => {
+      // Add productId to params for consistency
+      req.params.productId = req.params.id;
+      biddingController.getAuctionStats(req, res, next);
+    }
   );
 
 export default router;

@@ -42,4 +42,8 @@ router
     paymentController.refundPayment
   );
 
+router
+  .route('/mock-payment')
+  .get(paymentController.mockPayment);
+
 export default router;

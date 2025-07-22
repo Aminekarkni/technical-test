@@ -55,6 +55,16 @@ export async function connect() {
       await sequelize.sync({ alter: true });
       Logger.info('Database synchronized');
     }
+    
+    // Run production seeds on startup
+    if (environment === 'production' || environment === 'development') {
+      try {
+        const { runProductionSeeds } = await import('./seeders/productionSeeder');
+        await runProductionSeeds();
+      } catch (seedError) {
+        Logger.warn('Production seeding failed, continuing without seeds:', seedError);
+      }
+    }
   } catch (error) {
     Logger.error('Unable to connect to the database:', error);
     throw error;

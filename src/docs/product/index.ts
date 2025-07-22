@@ -1,6 +1,6 @@
 /**
  * @swagger
  * tags:
- *  name: Product
- *  description: The Products managing API
+ *   name: Products
+ *   description: Product management endpoints
  */

@@ -2,21 +2,24 @@
  * @swagger
  * /auth/logout:
  *   post:
- *     summary: Logout
+ *     summary: Logout user
+ *     description: Logout user and invalidate tokens
  *     tags: [Authentication]
- *
  *     security:
- *      - bearerAuth: []
+ *       - BearerAuth: []
  *     responses:
  *       200:
- *         description: OK
- *       400:
- *          description: 	Validation Failed
+ *         description: Logout successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SuccessResponse'
  *       401:
- *          description: Error Token
- *       403:
- *          description: Access Denied / Unauthorized
+ *         description: Unauthorized - invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  *       500:
- *          description: Internal server error
- *
+ *         description: Internal server error
  */

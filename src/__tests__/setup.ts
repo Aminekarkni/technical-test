@@ -76,6 +76,10 @@ beforeAll(async () => {
   // Test the connection
   await testSequelize.authenticate();
   console.log('Test database connection established');
+
+  // Sync all models to create tables
+  await testSequelize.sync({ force: true });
+  console.log('Test database tables created');
 }, 30000);
 
 afterAll(async () => {

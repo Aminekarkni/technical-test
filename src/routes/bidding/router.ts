@@ -7,10 +7,34 @@ import schema from './schema';
 const router = express.Router();
 
 router
+  .route('/bid')
+  .post(
+    authentication,
+    validator(schema.placeBid, ValidationSource.BODY),
+    biddingController.placeBid
+  );
+
+router
+  .route('/product/:productId')
+  .get(
+    authentication,
+    validator(schema.productParam, ValidationSource.PARAM),
+    biddingController.getProductBids
+  );
+
+router
   .route('/my-bids')
   .get(
     authentication,
     biddingController.getUserBids
+  );
+
+router
+  .route('/winning/:productId')
+  .get(
+    authentication,
+    validator(schema.productParam, ValidationSource.PARAM),
+    biddingController.getWinningBid
   );
 
 router

@@ -4,14 +4,36 @@ import Notification, { NotificationType, NotificationStatus } from '../../databa
 import User from '../../database/models/User';
 import Logger from '../../core/Logger';
 
-if (process.env.NODE_ENV !== 'test') {
-  firebase.initializeApp({
-    credential: firebase.credential.cert({
-      projectId: NotificationConfig.project_id,
-      clientEmail: NotificationConfig.client_email,
-      privateKey: NotificationConfig.private_key!.trim().replace(/\n/g, '\n'),
-    }),
-  });
+let firebaseInitialized = false;
+
+function initializeFirebase() {
+  if (firebaseInitialized) return;
+  
+  if (process.env.NODE_ENV === 'test') {
+    firebaseInitialized = true;
+    return;
+  }
+
+  if (!NotificationConfig.project_id || !NotificationConfig.client_email || !NotificationConfig.private_key) {
+    Logger.warn('Firebase configuration missing, FCM notifications will be disabled');
+    firebaseInitialized = true;
+    return;
+  }
+
+  try {
+    firebase.initializeApp({
+      credential: firebase.credential.cert({
+        projectId: NotificationConfig.project_id,
+        clientEmail: NotificationConfig.client_email,
+        privateKey: NotificationConfig.private_key.trim().replace(/\n/g, '\n'),
+      }),
+    });
+    firebaseInitialized = true;
+    Logger.info('Firebase initialized successfully');
+  } catch (error) {
+    Logger.error('Failed to initialize Firebase:', error);
+    firebaseInitialized = true;
+  }
 }
 
 export interface NotificationData {
@@ -58,6 +80,8 @@ export class FCMService {
     notificationData: NotificationData
   ): Promise<boolean> {
     try {
+      initializeFirebase();
+      
       const user = await User.findByPk(userId);
       if (!user || !user.fcmTokens || user.fcmTokens.length === 0) {
         Logger.warn(`No FCM tokens found for user ${userId}`);
@@ -117,6 +141,8 @@ export class FCMService {
     notificationData: NotificationData
   ): Promise<boolean> {
     try {
+      initializeFirebase();
+      
       const payload: FCMNotificationPayload = {
         notification: {
           title: notificationData.title,
@@ -192,7 +218,7 @@ export class FCMService {
   }
 
   static async sendPaymentSuccessNotification(
-    userId: number,
+    userId: number ,
     orderId: number,
     amount: number
   ): Promise<boolean> {

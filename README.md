@@ -1,93 +1,379 @@
-# milagro
+# 🏆 Auction System API
 
+A comprehensive Node.js/TypeScript auction system with real-time bidding, payment integration, and FCM notifications.
 
+## 🚀 Quick Start
 
-## Getting started
+### Prerequisites
+- Node.js (v16 or higher)
+- Docker & Docker Compose
+- MySQL (via Docker)
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://gitlab.com/AMSZ004/milagro.git
-git branch -M main
-git push -uf origin main
+### 1. Clone and Setup
+```bash
+git clone <repository-url>
+cd amine-test
+npm install
 ```
 
-## Integrate with your tools
+### 2. Environment Configuration
+```bash
+cp example.env .env
+# Edit .env with your configuration
+```
 
-- [ ] [Set up project integrations](https://gitlab.com/AMSZ004/milagro/-/settings/integrations)
+### 3. Start Database
+```bash
+npm run db:start
+# or
+docker-compose up -d mysql
+```
 
-## Collaborate with your team
+### 4. Run Database Seeding
+```bash
+npm run seed
+```
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+### 5. Start Development Server
+```bash
+npm run dev
+```
 
-## Test and Deploy
+The API will be available at `http://localhost:3000`
 
-Use the built-in continuous integration in GitLab.
+## 📋 Available Scripts
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+### Development
+```bash
+npm run dev          # Start development server with hot reload
+npm run build        # Build TypeScript to JavaScript
+npm run start        # Start production server
+```
 
-***
+### Database Management
+```bash
+npm run db:start     # Start MySQL database
+npm run db:stop      # Stop MySQL database
+npm run db:reset     # Reset database (removes all data)
+```
 
-# Editing this README
+### Seeding
+```bash
+npm run seed         # Run database seeding with sample data
+npm run seed:direct  # Run direct seeding (alternative method)
+```
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+### Testing
+```bash
+npm run test         # Run all tests (unit + e2e)
+npm run test:e2e     # Run only E2E tests
+npm run test:unit    # Run only unit tests
+npm run test:watch   # Run tests in watch mode
+npm run test:coverage # Run tests with coverage report
+```
 
-## Suggestions for a good README
+### Docker
+```bash
+npm run docker:build     # Build Docker image
+npm run docker:run       # Run Docker container
+npm run docker:compose   # Start all services with Docker Compose
+npm run docker:compose:dev # Start development services
+```
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+## 🗄️ Database Seeding
 
-## Name
-Choose a self-explaining name for your project.
+The seeding process creates:
+- **Admin User**: `admin@milagro.com` / `admin123456`
+- **Test User**: `user@milagro.com` / `user123456`
+- **Categories**: Electronics, Fashion, Home & Garden, etc.
+- **Sample Products**: Both fixed-price and auction items
+- **Sample Auctions**: With various end times and starting prices
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+### Seeding Commands
+```bash
+# Standard seeding
+npm run seed
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+# Direct seeding (alternative)
+npm run seed:direct
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+# Reset database and reseed
+npm run db:reset && npm run seed
+```
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+## 🧪 E2E Testing
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+### Run E2E Tests Only
+```bash
+npm run test:e2e
+```
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+### What E2E Tests Cover
+- ✅ Complete auction flow: Login → Create Auction → Place Bid → Auction Ends → Order Created → Payment Ready
+- ✅ Multiple users bidding on same auction
+- ✅ Auction with no bids gracefully handled
+- ✅ Authentication and authorization validation
+- ✅ Login credentials validation
+- ✅ Auction creation requirements validation
+- ✅ Bid requirements validation
+- ✅ Auction processor service with winning bid
+- ✅ Auction processor service with no winning bid
+- ✅ Input validation and error handling
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+### Test Output Example
+```
+✅ Complete auction flow test passed successfully!
+📦 Order created: AUCTION-1753141796438-9J5ZQ6F3F
+💰 Total amount: $150.00
+👤 Winner: Existing User
+📧 Email: existinguser@example.com
+💳 Payment status: pending_payment
+```
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+## 🔄 Complete Auction Flow
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+### 📊 Flow Overview Table
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+| Step | Action | Route | Method | Description | Authentication |
+|------|--------|-------|--------|-------------|----------------|
+| 1 | User Login | `/api/auth/login` | POST | Authenticate user and get JWT token | ❌ |
+| 2 | Create Auction | `/api/products` | POST | Create new auction product | ✅ |
+| 3 | Place Bid | `/api/bidding/bid` | POST | Place bid on auction | ✅ |
+| 4 | Check Auction Status | `/api/auctions/:id/status` | GET | Get auction status and winner info | ❌ |
+| 5 | Process Ended Auctions | `/api/auctions/process` | POST | Manually trigger auction processing | ✅ |
+| 6 | Create Payment | `/api/payments/auction-order` | POST | Create payment for auction order | ✅ |
+| 7 | Check Payment Status | `/api/payments/status/:invoiceId` | GET | Get payment status | ❌ |
+| 8 | View Orders | `/api/orders` | GET | Get user's orders | ✅ |
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+### 🔗 Detailed API Routes
 
-## License
-For open source projects, say how it is licensed.
+#### Authentication Routes
+| Route | Method | Description | Auth Required |
+|-------|--------|-------------|---------------|
+| `/api/auth/register` | POST | Register new user | ❌ |
+| `/api/auth/login` | POST | Login user | ❌ |
+| `/api/auth/login/google` | POST | Google OAuth login | ❌ |
+| `/api/auth/logout` | POST | Logout user | ✅ |
+| `/api/auth/refresh-token` | POST | Refresh access token | ❌ |
+| `/api/auth/fcm-token` | POST/DELETE | Add/remove FCM token | ✅ |
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+#### Product Routes
+| Route | Method | Description | Auth Required |
+|-------|--------|-------------|---------------|
+| `/api/products` | GET | Get all products | ❌ |
+| `/api/products` | POST | Create new product/auction | ✅ |
+| `/api/products/:id` | GET | Get product by ID | ❌ |
+| `/api/products/:id` | PUT | Update product | ✅ |
+| `/api/products/:id` | DELETE | Delete product | ✅ |
+| `/api/products/:id/bids` | POST | Place bid on product | ✅ |
+| `/api/products/:id/bids` | GET | Get product bids | ❌ |
+| `/api/products/:id/bids/winning` | GET | Get winning bid | ❌ |
+| `/api/products/:id/bids/stats` | GET | Get auction statistics | ❌ |
+
+#### Bidding Routes
+| Route | Method | Description | Auth Required |
+|-------|--------|-------------|---------------|
+| `/api/bidding/bid` | POST | Place bid | ✅ |
+| `/api/bidding/product/:productId` | GET | Get product bids | ✅ |
+| `/api/bidding/my-bids` | GET | Get user's bids | ✅ |
+| `/api/bidding/winning/:productId` | GET | Get winning bid | ✅ |
+| `/api/bidding/cancel/:bidId` | DELETE | Cancel bid | ✅ |
+
+#### Auction Routes
+| Route | Method | Description | Auth Required |
+|-------|--------|-------------|---------------|
+| `/api/auctions/process` | POST | Process ended auctions | ✅ |
+| `/api/auctions/:auctionId/status` | GET | Get auction status | ❌ |
+| `/api/auctions/:auctionId/orders` | GET | Get auction orders | ❌ |
+
+#### Payment Routes
+| Route | Method | Description | Auth Required |
+|-------|--------|-------------|---------------|
+| `/api/payments/fixed-price-order` | POST | Create fixed price order payment | ✅ |
+| `/api/payments/auction-order` | POST | Create auction order payment | ✅ |
+| `/api/payments/status/:invoiceId` | GET | Get payment status | ❌ |
+| `/api/payments/callback` | POST | Payment webhook callback | ❌ |
+| `/api/payments/refund/:invoiceId` | POST | Process refund | ✅ |
+| `/api/payments/mock-payment` | GET | Mock payment for testing | ❌ |
+
+#### Order Routes
+| Route | Method | Description | Auth Required |
+|-------|--------|-------------|---------------|
+| `/api/orders` | POST | Create fixed price order | ✅ |
+| `/api/orders` | GET | Get user's orders | ✅ |
+| `/api/orders/:id` | GET | Get order by ID | ✅ |
+| `/api/orders/:id` | DELETE | Cancel order | ✅ |
+
+## 🔔 FCM Notifications
+
+The system sends real-time notifications for:
+
+### ✅ Implemented Notifications
+- **Outbid Notifications**: When someone places a higher bid
+- **Auction Won Notifications**: When auction ends and someone wins
+- **Payment Success Notifications**: When payment is successful
+- **Payment Failed Notifications**: When payment fails
+
+### 📱 Notification Flow
+1. User registers FCM token via `/api/auth/fcm-token`
+2. System sends notifications for auction events
+3. Notifications stored in database for tracking
+4. Multi-device support (users can have multiple tokens)
+
+## 🏗️ System Architecture
+
+### Core Components
+- **Express.js**: Web framework
+- **Sequelize**: ORM for MySQL
+- **JWT**: Authentication
+- **Firebase Admin**: FCM notifications
+- **MyFatoorah**: Payment gateway
+- **Jest**: Testing framework
+- **Docker**: Containerization
+
+### Key Services
+- **AuctionProcessorService**: Handles auction conclusion
+- **BiddingService**: Manages bid placement and validation
+- **FCMService**: Sends push notifications
+- **MyFatoorahService**: Payment processing
+
+## 🔧 Environment Variables
+
+### Required Configuration
+```env
+# Database
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=milagro
+DB_USER=milagro_user
+DB_PASSWORD=milagro_password
+
+# JWT
+ACCESS_TOKEN_VALIDITY_DAYS=7
+REFRESH_TOKEN_VALIDITY_DAYS=30
+
+# Firebase (for FCM)
+FIREBASE_PROJECT_ID=your-project-id
+FIREBASE_CLIENT_EMAIL=your-client-email
+FIREBASE_PRIVATE_KEY=your-private-key
+
+# MyFatoorah (Payment)
+MY_FATOORAH_TOKEN=your-token
+MY_FATOORAH_BASEURL=https://apitest.myfatoorah.com
+```
+
+## 🐳 Docker Setup
+
+### Development with Docker
+```bash
+# Start development environment
+docker-compose -f docker-compose.dev.yml up -d
+
+# View development logs
+docker-compose -f docker-compose.dev.yml logs -f
+```
+
+## 📊 API Documentation
+
+### Swagger UI
+Once the server is running, visit:
+```
+http://localhost:3000/api-docs
+```
+
+### Health Check
+```
+GET http://localhost:3000/health
+```
+
+## 🧪 Testing Strategy
+
+### Test Types
+- **E2E Tests**: Complete flow testing
+
+### Test Database
+- Separate test database 
+- Automatic cleanup between tests
+- Isolated test environment
+
+### Running Tests
+```bash
+# All tests
+npm run test
+
+# E2E only
+npm run test:e2e
+
+# Unit only
+npm run test:unit
+
+# With coverage
+npm run test:coverage
+```
+
+## 🚀 Production Deployment
+
+### Build for Production
+```bash
+npm run build
+npm start
+```
+
+### Docker Production
+```bash
+docker build -t auction-system .
+docker run -p 3000:3000 auction-system
+```
+
+## 📝 API Examples
+
+### Complete Auction Flow Example
+
+```bash
+# 1. Login
+curl -X POST http://localhost:3000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@milagro.com", "password": "user123456"}'
+
+# 2. Create Auction
+curl -X POST http://localhost:3000/api/products \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Test Auction",
+    "description": "Test auction description",
+    "type": "auction",
+    "startingPrice": 100,
+    "auctionEndTime": "2024-01-01T00:00:00.000Z",
+    "images": ["https://example.com/image.jpg"],
+    "coverImage": "https://example.com/cover.jpg",
+    "categoryId": 1
+  }'
+
+# 3. Place Bid
+curl -X POST http://localhost:3000/api/bidding/bid \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "productId": 1,
+    "bidAmount": 150,
+    "note": "My bid"
+  }'
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Run the test suite
+6. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the ISC License.
+
+---
+
+**🎉 Happy Bidding!** The auction system is now ready for production use with comprehensive testing, real-time notifications, and payment integration.

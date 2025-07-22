@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /auth/login/user:
+ * /auth/login:
  *   post:
  *     summary: login user
  *     requestBody:

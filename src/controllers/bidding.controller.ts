@@ -7,14 +7,11 @@ import Product from '../database/models/Product';
 
 export const placeBid = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
-    const { bidAmount, note } = req.body;
+    const { productId, bidAmount, note } = req.body;
     const userId = (req as any).user.id;
     
-    const productIdNum = Number(id);
-    
-    if (isNaN(productIdNum)) {
-      throw new BadRequestError('Invalid product ID');
+    if (!productId || isNaN(Number(productId))) {
+      throw new BadRequestError('Valid product ID is required');
     }
 
     if (!bidAmount || bidAmount <= 0) {
@@ -22,7 +19,7 @@ export const placeBid = async (req: Request, res: Response, next: NextFunction) 
     }
 
     const result = await BiddingService.placeBid(userId, {
-      productId: productIdNum,
+      productId: Number(productId),
       bidAmount: Number(bidAmount),
       note,
     });
@@ -35,8 +32,8 @@ export const placeBid = async (req: Request, res: Response, next: NextFunction) 
 
 export const getProductBids = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
-    const productIdNum = Number(id);
+    const { productId } = req.params;
+    const productIdNum = Number(productId);
     
     if (isNaN(productIdNum)) {
       throw new BadRequestError('Invalid product ID');
@@ -45,6 +42,10 @@ export const getProductBids = async (req: Request, res: Response, next: NextFunc
     const product = await Product.findByPk(productIdNum);
     if (!product) {
       throw new NotFoundError('Product not found');
+    }
+
+    if (product.type !== 'auction') {
+      throw new BadRequestError('Product is not an auction');
     }
 
     const bids = await BiddingService.getProductBids(productIdNum);
@@ -68,8 +69,8 @@ export const getUserBids = async (req: Request, res: Response, next: NextFunctio
 
 export const getWinningBid = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
-    const productIdNum = Number(id);
+    const { productId } = req.params;
+    const productIdNum = Number(productId);
     
     if (isNaN(productIdNum)) {
       throw new BadRequestError('Invalid product ID');
@@ -78,6 +79,10 @@ export const getWinningBid = async (req: Request, res: Response, next: NextFunct
     const product = await Product.findByPk(productIdNum);
     if (!product) {
       throw new NotFoundError('Product not found');
+    }
+
+    if (product.type !== 'auction') {
+      throw new BadRequestError('Product is not an auction');
     }
 
     const winningBid = await BiddingService.getWinningBid(productIdNum);
@@ -98,12 +103,7 @@ export const cancelBid = async (req: Request, res: Response, next: NextFunction)
     }
 
     const success = await BiddingService.cancelBid(userId, bidIdNum);
-
-    if (success) {
-      return new SuccessResponse('Bid cancelled successfully', {}).send(res);
-    } else {
-      throw new BadRequestError('Failed to cancel bid');
-    }
+    return new SuccessResponse('Bid cancelled successfully', { success }).send(res);
   } catch (error) {
     next(error);
   }
@@ -111,20 +111,24 @@ export const cancelBid = async (req: Request, res: Response, next: NextFunction)
 
 export const getAuctionStats = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
-    const productIdNum = Number(id);
+    const { productId } = req.params;
+    const productIdNum = Number(productId);
     
     if (isNaN(productIdNum)) {
       throw new BadRequestError('Invalid product ID');
     }
-    
+
     const product = await Product.findByPk(productIdNum);
     if (!product) {
       throw new NotFoundError('Product not found');
     }
 
+    if (product.type !== 'auction') {
+      throw new BadRequestError('Product is not an auction');
+    }
+
     const stats = await BiddingService.getAuctionStats(productIdNum);
-    return new SuccessResponse('Auction statistics retrieved successfully', stats).send(res);
+    return new SuccessResponse('Auction stats retrieved successfully', { stats }).send(res);
   } catch (error) {
     next(error);
   }

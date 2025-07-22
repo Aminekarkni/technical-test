@@ -71,6 +71,7 @@ export class MyFatoorahService {
         CustomerReferenceId: '',
         UserDefinedField: '',
         SendInvoiceOption: 1,
+        NotificationOption: 1,
         InvoiceItems: [
           {
             ItemName: `Order #${order.orderNumber}`,
@@ -145,6 +146,7 @@ export class MyFatoorahService {
         CustomerReferenceId: '',
         UserDefinedField: '',
         SendInvoiceOption: 1,
+        NotificationOption: 1,
         InvoiceItems: [
           {
             ItemName: `Auction Win - Order #${order.orderNumber}`,
@@ -152,7 +154,7 @@ export class MyFatoorahService {
             UnitPrice: winningBid,
           },
         ],
-        CallBackUrl: `${process.env.BASE_URL}/api/payments/callback`,
+        CallBackUrl: `${process.env.BASE_URL}/api/payments/error`,
         ErrorUrl: `${process.env.BASE_URL}/api/payments/error`,
         Language: 'EN',
         ExpireDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours
